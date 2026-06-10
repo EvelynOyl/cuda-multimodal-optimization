@@ -1,0 +1,40 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# requirements-linux-cuda118.txt — Linux + CUDA 11.8 专属依赖
+# ═══════════════════════════════════════════════════════════════════════════
+# 用法（推荐用脚本）：
+#   bash scripts/install_linux_cuda118.sh
+# 手动：
+#   pip install torch==2.1.2 --index-url https://download.pytorch.org/whl/cu118
+#   pip install -r requirements.txt -r requirements-linux-cuda118.txt
+#
+# ⚠️ 版本硬性约束（CUDA 11.8 导致）：
+#   - PyTorch ≤ 2.1.2      （2.2+ 已移除 CUDA 11.8 预编译包）
+#   - vLLM   ≤ 0.3.3       （0.4+ 预编译包仅 CUDA 12.1, 源码编译可突破）
+#   - bitsandbytes ≤ 0.41.3（0.42+ 仅 CUDA 12.x）
+#   - xformers ≤ 0.0.23     （匹配 torch 2.1.x + CUDA 11.8）
+#
+#   💡 如果管理员同意升 CUDA 12.1+，用 scripts/install_linux_cuda12.sh
+#      可解锁 torch 2.5 + vLLM 0.6 + bitsandbytes 0.43
+
+# ── PyTorch（CUDA 11.8 预编译）─────────────────────────────────────────────
+# 版本已在 install 脚本中用 --index-url 锁定，此处只声明范围
+torch==2.1.2
+torchvision==0.16.2
+torchaudio==2.1.2
+
+# ── vLLM 推理引擎 ─────────────────────────────────────────────────────────
+vllm==0.3.3                # CUDA 11.8 最后一个预编译版
+ray>=2.9.0                 # vLLM 分布式依赖
+nvidia-ml-py>=12.535       # GPU 监控
+
+# ── CUDA 11.8 专用量化工具 ────────────────────────────────────────────────
+bitsandbytes==0.41.3       # INT4/INT8 CUDA kernels（最后一版支持 CUDA 11.8）
+xformers==0.0.23.post1     # 高效注意力（可选，匹配 torch 2.1 + CUDA 11.8）
+
+# ── Flash Attention（推荐，需自行编译）─────────────────────────────────────
+# pip install flash-attn==2.3.6 --no-build-isolation
+# ↑ CUDA 11.8 无预编译包，pip install 会自动触发源码编译（需 10-15 分钟）
+
+# ── 服务器监控 / 部署 ─────────────────────────────────────────────────────
+psutil>=5.9.0              # 内存 / CPU 使用率监控
+prometheus-client>=0.19.0  # /metrics 端点

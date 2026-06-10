@@ -1,0 +1,70 @@
+# ── Hardware detection ──────────────────────────────────────────
+hardware:
+  # auto / cuda / mlx
+  backend: auto
+  cuda:
+    device_id: 0
+    # Tile sizes for GEMM (tuned for A100 80GB)
+    tile_m: 128
+    tile_n: 128
+    tile_k: 32
+    # Number of SMs to saturate
+    num_sms: 108
+  mlx:
+    # MLX uses Metal Performance Shaders under the hood
+    use_mps: true
+
+# ── Model configuration ────────────────────────────────────────
+model:
+  name: "liuhaotian/llava-v1.5-7b"
+  trust_remote_code: true
+  dtype: float16
+  max_model_len: 4096
+
+# ── vLLM serving ───────────────────────────────────────────────
+vllm:
+  host: "0.0.0.0"
+  port: 8000
+  # Maximum number of sequences batched concurrently
+  max_num_seqs: 256
+  # Maximum number of batched tokens per iteration
+  max_num_batched_tokens: 2048
+  # GPU memory utilization target (0.0 - 1.0)
+  gpu_memory_utilization: 0.90
+  # KV-cache block size
+  block_size: 16
+  # Swap space (CPU memory for offloaded KV blocks, in GB)
+  swap_space: 4
+  # Use the continuous batching scheduler
+  enable_continuous_batching: true
+  # Prefix caching for shared prompt prefixes
+  enable_prefix_caching: true
+  # Chunked prefill for better scheduling
+  enable_chunked_prefill: true
+  # Maximum number of prefill tokens per step
+  max_num_prefill_tokens: 8192
+
+# ── INT4 Quantization ──────────────────────────────────────────
+quantization:
+  method: "gptq"          # gptq / awq / rtndynamic
+  bits: 4
+  group_size: 128
+  # Use asymmetric quantization (has zero-point)
+  asymmetric: true
+  # Dampening percentage for Hessian diagonal
+  damp_percent: 0.01
+  # Number of calibration samples
+  num_samples: 128
+  # Calibration sequence length
+  seq_len: 2048
+  # Layers to quantize (null = all Linear layers)
+  target_modules: null
+  # Use act-order (reorder channels by activation magnitude)
+  act_order: true
+  # Use per-channel or per-group scaling
+  per_group: true
+
+# ── Logging ────────────────────────────────────────────────────
+logging:
+  level: "INFO"
+  file: "logs/server.log"

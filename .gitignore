@@ -1,0 +1,54 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+eggs/
+*.egg
+.eggs/
+
+# Virtual environment
+.venv/
+venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Large binary files
+*.tar.gz
+*.tar
+*.zip
+*.bin
+*.pt
+*.pth
+*.safetensors
+*.ckpt
+*.onnx
+
+# Docker images
+*.tar
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment
+.env
+.env.local

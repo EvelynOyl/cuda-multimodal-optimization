@@ -1,0 +1,22 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# requirements-mac.txt — Apple Silicon Mac (M1/M2/M3/M4/M5) 专属依赖
+# ═══════════════════════════════════════════════════════════════════════════
+# 用法（推荐用脚本）：
+#   bash scripts/install_mac.sh
+# 手动：
+#   pip install -r requirements.txt -r requirements-mac.txt
+#
+# 说明：
+#   - torch 安装 CPU+MPS 版（无 CUDA），由 install_mac.sh 指定 index-url
+#   - mlx 利用 Apple Metal Performance Shaders 做 GPU 加速
+#   - vLLM / bitsandbytes 无法在 Mac 上运行，不要装
+
+# — Apple MLX (Metal GPU 加速，替代 CUDA) —
+mlx>=0.29.4
+mlx-lm>=0.29.0      # MLX 语言模型工具（可选，用于本地小模型测试）     
+
+# ── Mac 本地开发不需要的包（明确标注） ─────────────────────────────────────
+# ❌ vllm          → 无 CUDA，无法运行
+# ❌ bitsandbytes  → 依赖 CUDA
+# ❌ xformers      → 依赖 CUDA
+# ❌ nvidia-ml-py  → 无 NVIDIA 驱动
